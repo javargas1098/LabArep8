@@ -24,7 +24,8 @@ public class example {
 	public void run() {
 		CamelContext context = new DefaultCamelContext();
 		// String brokerURL = args[0];
-		 ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616?jms.useAsyncSend=true");
+		ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
+				"tcp://ec2-3-91-246-38.compute-1.amazonaws.com:61616?jms.useAsyncSend=true");
 		try {
 			// Create a Connection
 			Connection connection = connectionFactory.createConnection("smx", "smx");
@@ -37,20 +38,20 @@ public class example {
 			Destination destination = session.createQueue("events");
 
 			// Create a MessageProducer from the Session to the Topic or Queue
-			 MessageProducer producer = session.createProducer(destination);
-             producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
+			MessageProducer producer = session.createProducer(destination);
+			producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 
-			  // Create a messages
-            String text = "Hello world! From: " + Thread.currentThread().getName() + " : " + this.hashCode();
-            TextMessage message = session.createTextMessage(text);
+			// Create a messages
+			String text = "Hello world! From: " + Thread.currentThread().getName() + " : " + this.hashCode();
+			TextMessage message = session.createTextMessage(text);
 
-            // Tell the producer to send the message
-            System.out.println("Sent message: "+ message.hashCode() + " : " + Thread.currentThread().getName());
-            producer.send(message);
+			// Tell the producer to send the message
+			System.out.println("Sent message: " + message.hashCode() + " : " + Thread.currentThread().getName());
+			producer.send(message);
 
-            // Clean up
-            session.close();
-            connection.close();
+			// Clean up
+			session.close();
+			connection.close();
 		} catch (Exception e) {
 			System.out.println("Caught: " + e);
 			e.printStackTrace();
